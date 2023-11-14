@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'phonenumber_field',
+    'scholarship_holder.apps.ScholarshipHolderConfig',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +86,7 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+AUTH_USER_MODEL = "scholarship_holder.ScholarshipHolder"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -108,13 +110,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
+TIME_ZONE = 'America/Fortaleza'
+TIME_INPUT_FORMATS = ('%H:%M',)
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
+USE_I18N = False
 
 USE_TZ = True
 
-
 STATIC_URL = 'static/'
+
+
+# Phone number field 
+
+PHONENUMBER_DEFAULT_REGION='BR'
