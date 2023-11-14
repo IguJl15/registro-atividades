@@ -6,24 +6,26 @@ from .managers import CustomUserManager
 
 
 class ScholarshipHolder(AbstractUser, PermissionsMixin):
-    username = None
-
-    first_name = None
-    last_name = None
 
     name = models.CharField(verbose_name="Nome", max_length=250)
     email = models.EmailField("Email", unique=True)
 
     cpf = models.CharField(verbose_name="CPF", max_length=14)
 
+    # scholarships = models.ManyToManyField("scholarship.Scholarship", verbose_name="Bolsas")
+
+    # User details
+    username = None
+    first_name = None
+    last_name = None
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     class Meta:
-        verbose_name = "Bolsista"
-        verbose_name_plural = "Bolsistas"
+        verbose_name = "bolsista"
+        verbose_name_plural = "bolsistas"
 
     def __str__(self):
         return self.name

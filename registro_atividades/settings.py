@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'phonenumber_field',
     'scholarship_holder.apps.ScholarshipHolderConfig',
+    'scholarship.apps.ScholarshipConfig',
+    'records.apps.RecordsConfig',
 ]
 
 MIDDLEWARE = [

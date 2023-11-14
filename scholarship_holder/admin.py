@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from scholarship.models import Scholarship
 
 from scholarship_holder.models import (
     Address,
@@ -54,6 +55,7 @@ class ScholarshipHolderAdmin(admin.ModelAdmin):
         UserBankingInfoInline,
         UserInstitutionalScheduleInline,
     ]
+    filter_horizontal = ['scholarship']
 
 
 admin.site.register(Bank)
