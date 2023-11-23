@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'phonenumber_field',
+    'django_bootstrap5',
     'scholarship_holder.apps.ScholarshipHolderConfig',
     'scholarship.apps.ScholarshipConfig',
     'records.apps.RecordsConfig',

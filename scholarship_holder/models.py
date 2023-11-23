@@ -6,7 +6,6 @@ from .managers import CustomUserManager
 
 
 class ScholarshipHolder(AbstractUser, PermissionsMixin):
-
     name = models.CharField(verbose_name="Nome", max_length=250)
     email = models.EmailField("Email", unique=True)
 

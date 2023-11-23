@@ -1,0 +1,15 @@
+{% extends "./index.html" %}
+
+
+{% load django_bootstrap5 %}
+
+{% block title %}
+<span>Novo registro de atividade</span>
+{% endblock %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% bootstrap_button button_type="submit" content="Salvar" %}
+</form>
+{% endblock content %}
