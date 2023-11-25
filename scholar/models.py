@@ -1,17 +1,11 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 from django.urls import reverse
-
 from .managers import CustomUserManager
 
 
-class ScholarshipHolder(AbstractUser, PermissionsMixin):
-    name = models.CharField(verbose_name="Nome", max_length=250)
+class CustomUser(AbstractUser, PermissionsMixin):
     email = models.EmailField("Email", unique=True)
-
-    cpf = models.CharField(verbose_name="CPF", max_length=14)
-
-    # scholarships = models.ManyToManyField("scholarship.Scholarship", verbose_name="Bolsas")
 
     # User details
     username = None
@@ -21,6 +15,21 @@ class ScholarshipHolder(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
+
+    def get_absolute_url(self):
+        return reverse("bolsistas", kwargs={"pk": self.pk})
+
+class Scholar(models.Model):
+    user = models.OneToOneField(CustomUser, verbose_name="Usuário", on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(verbose_name="Nome", max_length=250)
+    email = models.EmailField("Email", unique=True)
+
+    cpf = models.CharField(verbose_name="CPF", max_length=14)
+
+    # scholarships = models.ManyToManyField("scholarship.Scholarship", verbose_name="Bolsas")
 
     class Meta:
         verbose_name = "bolsista"
@@ -44,7 +53,7 @@ class Weekday(models.TextChoices):
 
 
 class InstitutionalSchedule(models.Model):
-    user = models.ForeignKey(ScholarshipHolder, on_delete=models.CASCADE)
+    user = models.ForeignKey(Scholar, on_delete=models.CASCADE)
 
     week_day = models.CharField(max_length=2, choices=Weekday.choices)
 
@@ -83,7 +92,7 @@ class BankingInfo(models.Model):
         CORRENTE = "CR", "Corrente"
         POUPANCA = "PP", "Poupança"
 
-    user = models.OneToOneField(ScholarshipHolder, on_delete=models.CASCADE)
+    user = models.OneToOneField(Scholar, on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=BankAccountType.choices)
     account_number = models.CharField(max_length=50)
 
@@ -102,7 +111,7 @@ class BankingInfo(models.Model):
 
 
 class Address(models.Model):
-    user = models.OneToOneField(ScholarshipHolder, on_delete=models.CASCADE)
+    user = models.OneToOneField(Scholar, on_delete=models.CASCADE)
     postal_code = models.CharField(max_length=8, verbose_name="CEP")
 
     locality = models.CharField(
@@ -124,7 +133,7 @@ class Address(models.Model):
 
 
 class PersonalData(models.Model):
-    user = models.OneToOneField(ScholarshipHolder, on_delete=models.CASCADE)
+    user = models.OneToOneField(Scholar, on_delete=models.CASCADE)
     rg = models.CharField(verbose_name="RG", unique=True, max_length=100)
     phone = models.CharField("Telefone", max_length=50)
     birthday = models.DateField("Nascimento")

@@ -5,18 +5,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from scholarship.models import Scholarship
 
-from scholarship_holder.models import (
+from scholar.models import (
     Address,
     Bank,
     BankingInfo,
+    CustomUser,
     InstitutionalSchedule,
     PersonalData,
-    ScholarshipHolder,
+    Scholar,
 )
 
 
-class ScholarshipHolderInline(admin.StackedInline):
-    model = ScholarshipHolder
+class ScholarInline(admin.StackedInline):
+    model = Scholar
     can_delete = False
 
     exclude = ["address", "banking_info", "institutional_schedule", "personal_data"]
@@ -47,8 +48,8 @@ class UserInstitutionalScheduleInline(admin.TabularInline):
 #     model = User
 
 
-@admin.register(ScholarshipHolder)
-class ScholarshipHolderAdmin(admin.ModelAdmin):
+@admin.register(Scholar)
+class ScholarAdmin(admin.ModelAdmin):
     inlines = [
         UserAddressInline,
         UserPersonalDataInline,
@@ -56,6 +57,8 @@ class ScholarshipHolderAdmin(admin.ModelAdmin):
         UserInstitutionalScheduleInline,
     ]
     filter_horizontal = ['scholarship']
+    exclude =[ 'user']
 
 
 admin.site.register(Bank)
+admin.site.register(CustomUser)

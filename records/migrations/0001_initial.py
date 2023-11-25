@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('start', models.TimeField(verbose_name='Hora inicial')),
                 ('end', models.TimeField(verbose_name='Hora final')),
                 ('scholarship', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='scholarship.scholarship', verbose_name='Projeto')),
-                ('scholarship_holder', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='Bolsista')),
+                ('scholar', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='Bolsista')),
             ],
             options={
                 'verbose_name': 'registro',

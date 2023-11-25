@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
-    'scholarship_holder.apps.ScholarshipHolderConfig',
+    'scholar.apps.ScholarConfig',
     'scholarship.apps.ScholarshipConfig',
     'records.apps.RecordsConfig',
 ]
@@ -88,7 +88,7 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "scholarship_holder.ScholarshipHolder"
+AUTH_USER_MODEL = "scholar.CustomUser"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

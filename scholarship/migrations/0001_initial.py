@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(max_length=50, verbose_name='Descrição')),
                 ('value', models.DecimalField(decimal_places=2, max_digits=6, verbose_name='Valor por hora')),
                 ('project', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='scholarship.project', verbose_name='Projeto')),
-                ('scholarship_holders', models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name='Bolsistas')),
+                ('scholars', models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name='Bolsistas')),
             ],
             options={
                 'verbose_name': 'bolsa',

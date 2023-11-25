@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from scholarship.models import Scholarship
 
-from scholarship_holder.models import ScholarshipHolder
+from scholar.models import Scholar
 
 
 class Record(models.Model):
@@ -13,7 +13,7 @@ class Record(models.Model):
     start = models.TimeField("Hora inicial", auto_now=False, auto_now_add=False)
     end = models.TimeField("Hora final", auto_now=False, auto_now_add=False)
 
-    scholarship_holder = models.ForeignKey(ScholarshipHolder, verbose_name="Bolsista", on_delete=models.PROTECT)
+    scholar = models.ForeignKey(Scholar, verbose_name="Bolsista", on_delete=models.PROTECT)
     scholarship = models.ForeignKey(Scholarship, verbose_name="Bolsa", on_delete=models.PROTECT)
 
     class Meta:

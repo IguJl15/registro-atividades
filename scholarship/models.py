@@ -27,7 +27,7 @@ class Scholarship(models.Model):
         Project, verbose_name="Projeto", on_delete=models.PROTECT
     )
 
-    scholarship_holders = models.ManyToManyField('scholarship_holder.ScholarshipHolder', verbose_name="Bolsistas")
+    scholars = models.ManyToManyField('scholar.Scholar', verbose_name="Bolsistas",  blank=True)
 
     class Meta:
         verbose_name = "bolsa"
