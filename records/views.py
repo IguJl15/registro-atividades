@@ -52,7 +52,10 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
             # Retrieve the current scholar's ID
             current_scholar: Scholar = request.user.scholar
 
-            scholarships: set[Scholarship] = current_scholar.scholarship_set.all()
+            selected_scholarship: Scholarship = form.cleaned_data["scholarship"] 
+            scholarship: set[Scholarship] = current_scholar.scholarship_set.get(id=selected_scholarship.id)
+            if(not scholarship):
+                return self.form_invalid(form)
             # Create a new Record instance
             record = Record(
                 description=form.cleaned_data["description"],
@@ -60,7 +63,7 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
                 start=form.cleaned_data["start"],
                 end=form.cleaned_data["end"],
                 scholar=current_scholar,
-                scholarship=form.cleaned_data["scholarship"],
+                scholarship=selected_scholarship,
             )
 
             # Save the Record instance
