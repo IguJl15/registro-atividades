@@ -1,0 +1,17 @@
+{% extends 'django_bootstrap5/bootstrap5.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+    {% block bootstrap5_title %}
+      {% block title %}
+
+      {% endblock %}
+    {% endblock %}
+
+    {% block content %}
+
+    {% endblock %}
+  </main>
+{% endblock %}
