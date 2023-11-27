@@ -3,8 +3,12 @@
 
 {% load django_bootstrap5 %}
 
-{% block title %}
-<span>Novo registro de atividade</span>
+{% block page_title %}
+    <h2>
+        {% block bootstrap5_title %}
+            Novo registro
+        {% endblock %}
+    </h2>
 {% endblock %}
 
 {% block content %}

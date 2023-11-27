@@ -2,11 +2,15 @@
 
 {% load django_bootstrap5 %}
 
-{% block title %}
+{% block page_title %}
   <div class="d-flex flex-row flex-wrap justify-content-center align-items-center">
-    <h2 class="flex-grow-1">Novo registro de atividade</h2>
+    <h2 class="flex-grow-1">
+      {% block bootstrap5_title %}
+        Registros de atividade
+      {% endblock %}
+    </h2>
     <div class="d-grid gap-2 flex-shrink-1">
-      <a  class="btn btn-primary" href="novo" role="button">Novo registro</a>
+      <a class="btn btn-primary" href="novo" role="button">Novo registro</a>
     </div>
   </div>
 {% endblock %}
@@ -30,5 +34,4 @@
       {% endfor %}
     </tbody>
   </table>
-
 {% endblock %}
