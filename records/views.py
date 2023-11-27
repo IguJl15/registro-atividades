@@ -82,3 +82,7 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
 
 class RecordListView(ScholarRequiredMixin, ListView):
     model = Record
+
+    def get_queryset(self):
+        current_scholar = self.request.user.scholar
+        return Record.objects.filter(scholar=current_scholar)

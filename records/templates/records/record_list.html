@@ -19,17 +19,19 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Descrição</th>
+        <th scope="col">Atvidade</th>
         <th scope="col">Data</th>
         <th scope="col">Horário</th>
+        <th scope="col">Bolsa</th>
       </tr>
     </thead>
     <tbody>
       {% for record in object_list %}
         <tr>
           <td>{{ record.description }}</td>
-          <td>{{ record.date|date }}</td>
+          <td>{{ record.date|date:'d/m/Y' }}</td>
           <td>{{ record.start }}-{{ record.end }}</td>
+          <td>{{ record.scholarship.description }}</td>
         </tr>
       {% endfor %}
     </tbody>
