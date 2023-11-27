@@ -1,26 +1,9 @@
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+
 from django.db import models
 from django.urls import reverse
-from .managers import CustomUserManager
 
+from users.models import CustomUser
 
-class CustomUser(AbstractUser, PermissionsMixin):
-    email = models.EmailField("Email", unique=True)
-
-    # User details
-    username = None
-    first_name = None
-    last_name = None
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
-
-    def __str__(self):
-        return self.email
-
-    def get_absolute_url(self):
-        return reverse("bolsistas", kwargs={"pk": self.pk})
 
 class Scholar(models.Model):
     user = models.OneToOneField(CustomUser, verbose_name="Usuário", on_delete=models.CASCADE, null=True, blank=True)

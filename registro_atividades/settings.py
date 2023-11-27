@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'scholar.apps.ScholarConfig',
     'scholarship.apps.ScholarshipConfig',
     'records.apps.RecordsConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -88,7 +89,10 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "scholar.CustomUser"
+AUTH_USER_MODEL = "users.CustomUser"
+
+LOGIN_REDIRECT_URL='/registros'
+LOGIN_URL='/login'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -121,7 +125,7 @@ USE_I18N = False
 USE_TZ = True
 
 STATIC_URL = 'static/'
-
+BOOTSTRAP5_INCLUDE_JS = True
 
 # Phone number field 
 

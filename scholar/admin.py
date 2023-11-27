@@ -1,15 +1,9 @@
 from django.contrib import admin
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from scholarship.models import Scholarship
-
 from scholar.models import (
     Address,
     Bank,
     BankingInfo,
-    CustomUser,
     InstitutionalSchedule,
     PersonalData,
     Scholar,
@@ -61,4 +55,3 @@ class ScholarAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Bank)
-admin.site.register(CustomUser)
