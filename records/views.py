@@ -95,10 +95,18 @@ class RecordListView(ScholarRequiredMixin, ListView):
             queryset = Record.objects.filter(scholar=current_scholar, scholarship__id__in=project_id)
         else:
             queryset = Record.objects.filter(scholar=current_scholar)
-
+        
+        date = self.request.GET.get('date', None)
+        
+        if date:
+            year = int(date.split('-')[0])
+            month = int(date.split('-')[1])
+            queryset = queryset.filter(date__month=month, date__year=year)
+        
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['scholarships_list'] = Scholarship.objects.filter(id__in=self.request.user.scholar.scholarship_set.all())
+        
+        context['scholarships_list'] = self.request.user.scholar.scholarship_set.all()
         return context

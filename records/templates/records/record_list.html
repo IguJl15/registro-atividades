@@ -31,20 +31,15 @@
           <select class="form-select" id="scholarship" name="scholarship">
             <option value="">Todos as bolsas</option>
             {% for scholarship in scholarships_list %}
-              <option value="{{ scholarship.id }}">{{ scholarship.description }}</option>
+              <option value="{{ scholarship.pk }}">{{ scholarship.description }}</option>
             {% endfor %}
           </select>
         </div>
 
-        {% comment %} <div class="d-flex flex-wrap">
-          <label for="scholarship" class="form-label">Bolsa:</label>
-          <select class="form-select" id="scholarship" name="scholarship">
-            <option value="">Todos as bolsas</option>
-            {% for scholarship in scholarships_list %}
-              <option value="{{ scholarship.id }}">{{ scholarship.description }}</option>
-            {% endfor %}
-          </select>
-        </div> {% endcomment %}
+        <div class="d-flex flex-wrap">
+          <label for="date" class="form-label">Mês:</label>
+          <input type="month" class="form-control" id="date" name="date" />
+        </div>
       </div>
     </div>
   </form>
