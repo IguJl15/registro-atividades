@@ -84,5 +84,18 @@ class RecordListView(ScholarRequiredMixin, ListView):
     model = Record
 
     def get_queryset(self):
+        # Filter records to only show the current user's scholar's records
         current_scholar = self.request.user.scholar
-        return Record.objects.filter(scholar=current_scholar)
+        project_id = self.request.GET.get('scholarship', None)
+
+        if project_id:
+            queryset = Record.objects.filter(scholar=current_scholar, scholarship__id__in=project_id)
+        else:
+            queryset = Record.objects.filter(scholar=current_scholar)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['scholarships_list'] = Scholarship.objects.filter(id__in=self.request.user.scholar.scholarship_set.all())
+        return context

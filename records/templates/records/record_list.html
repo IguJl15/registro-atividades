@@ -16,7 +16,40 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table">
+  <form method="get" class="form card">
+    <div class="card-body">
+      <div class="card-title d-flex flex-row flex-wrap justify-content-between align-items-center">
+        <h5 class="">Filtros</h5>
+        <div class="d-grid gap-2 flex-shrink-1">
+          <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+        </div>
+      </div>
+
+      <div class="pb-3 d-flex flex-row flex-wrap gap-2">
+        <div class="d-flex flex-wrap">
+          <label for="scholarship" class="form-label">Bolsa:</label>
+          <select class="form-select" id="scholarship" name="scholarship">
+            <option value="">Todos as bolsas</option>
+            {% for scholarship in scholarships_list %}
+              <option value="{{ scholarship.id }}">{{ scholarship.description }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% comment %} <div class="d-flex flex-wrap">
+          <label for="scholarship" class="form-label">Bolsa:</label>
+          <select class="form-select" id="scholarship" name="scholarship">
+            <option value="">Todos as bolsas</option>
+            {% for scholarship in scholarships_list %}
+              <option value="{{ scholarship.id }}">{{ scholarship.description }}</option>
+            {% endfor %}
+          </select>
+        </div> {% endcomment %}
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">Atvidade</th>
