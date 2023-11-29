@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'scholarship.apps.ScholarshipConfig',
     'records.apps.RecordsConfig',
     'users.apps.UsersConfig',
+    'coordinator.apps.CoordinatorConfig'
 ]
 
 MIDDLEWARE = [

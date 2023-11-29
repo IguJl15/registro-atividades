@@ -9,9 +9,14 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href={% url 'records_home' %}>Registros <span class="visually-hidden">(current)</span></a>
         </li>
+        {% if request.user.is_coordinator %}
+          <li class="nav-item">
+            <a class="nav-link" href={% url 'scholars_list' %}>Bolsistas</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
