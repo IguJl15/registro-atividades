@@ -12,7 +12,11 @@
         <li class="nav-item">
           <a class="nav-link" href={% url 'records_home' %}>Registros <span class="visually-hidden">(current)</span></a>
         </li>
-        {% if request.user.is_coordinator %}
+        <li class="nav-item">
+          <a class="nav-link" href={% url 'records_home' %}>{{ user.email }}<span class="visually-hidden"></span></a>
+        </li>
+        
+        {% if user.scholar.coordinator.is_coordinator %}
           <li class="nav-item">
             <a class="nav-link" href={% url 'scholars_list' %}>Bolsistas</a>
           </li>
@@ -25,7 +29,7 @@
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
         <div class="sidebar-sticky pt-3 h-100">
-          <ul class="nav flex-column justify-content-between h-100">
+          <ul class="nav flex-column h-100">
             <li class="nav-item">
               <a class="nav-link active" href={% url 'records_home' %}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
@@ -35,6 +39,17 @@
                 <span class="visually-hidden">(current)</span>
               </a>
             </li>
+
+        {% if user.scholar.coordinator.is_coordinator %}
+        <li class="nav-item">
+          
+          <a class="nav-link" href={% url 'scholars_list' %}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Bolsistas 
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+      {% endif %}
           </ul>
           <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
         </div>
