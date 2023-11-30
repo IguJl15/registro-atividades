@@ -6,4 +6,4 @@ class ScholarConfig(AppConfig):
     name = 'scholar'
 
     def ready(self):
-        import scholar.singals
+        import scholar.signals
