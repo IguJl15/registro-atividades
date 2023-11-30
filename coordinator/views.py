@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 
 from scholar.models import Scholar
 
-from .forms import AddressForm, BankingInfoForm, PersonalDataForm
+from .forms import AddressForm, BankingInfoForm, PersonalDataForm, ScholarForm
 
 
 class ScholarListView(ListView):
@@ -26,8 +26,15 @@ class ScholarListView(ListView):
 
 class ScholarCreateView(CreateView):
     model = Scholar
+    form_class = ScholarForm
 
-    fields = ["name", "email", "cpf"]
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Passes the request object to the form class.
+        This is necessary to only display members that belong to a given user"""
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+
+        return kwargs
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
