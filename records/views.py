@@ -52,9 +52,11 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
             # Retrieve the current scholar's ID
             current_scholar: Scholar = request.user.scholar
 
-            selected_scholarship: Scholarship = form.cleaned_data["scholarship"] 
-            scholarship: set[Scholarship] = current_scholar.scholarship_set.get(id=selected_scholarship.id)
-            if(not scholarship):
+            selected_scholarship: Scholarship = form.cleaned_data["scholarship"]
+            scholarship: set[Scholarship] = current_scholar.scholarship_set.get(
+                id=selected_scholarship.id
+            )
+            if not scholarship:
                 return self.form_invalid(form)
             # Create a new Record instance
             record = Record(
@@ -89,24 +91,28 @@ class RecordListView(ScholarRequiredMixin, ListView):
     def get_queryset(self):
         # Filter records to only show the current user's scholar's records
         current_scholar = self.request.user.scholar
-        project_id = self.request.GET.get('scholarship', None)
+        project_id = self.request.GET.get("scholarship", None)
+
+        print(current_scholar.coordinator.is_coordinator)
 
         if project_id:
-            queryset = Record.objects.filter(scholar=current_scholar, scholarship__id__in=project_id)
+            queryset = Record.objects.filter(
+                scholar=current_scholar, scholarship__id__in=project_id
+            )
         else:
             queryset = Record.objects.filter(scholar=current_scholar)
-        
-        date = self.request.GET.get('date', None)
-        
+
+        date = self.request.GET.get("date", None)
+
         if date:
-            year = int(date.split('-')[0])
-            month = int(date.split('-')[1])
+            year = int(date.split("-")[0])
+            month = int(date.split("-")[1])
             queryset = queryset.filter(date__month=month, date__year=year)
-        
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        context['scholarships_list'] = self.request.user.scholar.scholarship_set.all()
+
+        context["scholarships_list"] = self.request.user.scholar.scholarship_set.all()
         return context

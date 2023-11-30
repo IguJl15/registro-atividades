@@ -42,7 +42,6 @@ class UserInstitutionalScheduleInline(admin.TabularInline):
 #     model = User
 
 
-@admin.register(Scholar)
 class ScholarAdmin(admin.ModelAdmin):
     inlines = [
         UserAddressInline,
@@ -50,8 +49,9 @@ class ScholarAdmin(admin.ModelAdmin):
         UserBankingInfoInline,
         UserInstitutionalScheduleInline,
     ]
-    filter_horizontal = ['scholarship']
-    exclude =[ 'user']
+    filter_horizontal = ["scholarship"]
+    exclude = ["user"]
 
 
+admin.site.register(Scholar, ScholarAdmin)
 admin.site.register(Bank)

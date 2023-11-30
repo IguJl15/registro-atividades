@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block page_title %}
+  <h2>
+    {% block bootstrap5_title %}
+      Novo Bolsista
+    {% endblock %}
+  </h2>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <hr />
+    <h4>Dados Pessoais</h4>
+    {% bootstrap_form personal_data_form %}
+    <hr />
+    <h4>Endereço</h4>
+    {% bootstrap_form address_form %}
+    <hr />
+    <h4>Dados Bancários</h4>
+    {% bootstrap_form banking_info_form %}
+    {% bootstrap_button button_type = 'submit' content = 'Salvar' %}
+  </form>
+{% endblock %}

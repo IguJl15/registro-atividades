@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block page_title %}
+  <div class="d-flex flex-row flex-wrap justify-content-center align-items-center">
+    <h2 class="flex-grow-1">
+      {% block bootstrap5_title %}
+        Bolsistas
+      {% endblock %}
+    </h2>
+    <div class="d-grid gap-2 flex-shrink-1">
+      <a class="btn btn-primary" href={% url "create_scholar" %} role="button">Novo Bolsista</a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Nome</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in object_list %}
+        <tr>
+          <td>{{ record.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
