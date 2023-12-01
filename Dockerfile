@@ -18,12 +18,6 @@ COPY . /code
 
 EXPOSE 8000
 
-# Change before running the deploy command
-ENV DJANGO_SUPERUSER_EMAIL=admin@admin.com 
-ENV DJANGO_SUPERUSER_PASSWORD=admin
-
-RUN [ "python3", "manage.py", "migrate" ]
-RUN [ "python3", "manage.py", "createsuperuser", "--no-input" ]
 RUN [ "python3", "manage.py", "collectstatic", "--no-input", "-c"]
 
 CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "registro_atividades.wsgi"]
