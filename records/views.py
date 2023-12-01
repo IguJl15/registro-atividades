@@ -93,8 +93,6 @@ class RecordListView(ScholarRequiredMixin, ListView):
         current_scholar = self.request.user.scholar
         project_id = self.request.GET.get("scholarship", None)
 
-        print(current_scholar.coordinator.is_coordinator)
-
         if project_id:
             queryset = Record.objects.filter(
                 scholar=current_scholar, scholarship__id__in=project_id
