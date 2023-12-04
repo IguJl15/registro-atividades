@@ -46,6 +46,16 @@ class RecordCreateForm(forms.ModelForm):
             scholarships: QuerySet = current_scholar.scholarship_set.all()
             self.fields["scholarship"].queryset = scholarships.order_by("project__name")
 
+    def is_valid(self) -> bool:
+        start = self.data["start"]
+        end = self.data["end"]
+
+        if end < start:
+            self.add_error("end", "A Hora final deve ser depois da Hora inicial")
+            return False
+
+        return super().is_valid()
+
 
 class RecordCreateView(ScholarRequiredMixin, CreateView):
     model = Record
@@ -53,15 +63,14 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
     initial = {
         "start": "08:00",
         "end": "12:00",
-        "date": datetime.now(),
     }
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def form_valid(self, *args: str, **kwargs: Any) -> HttpResponse:
         form = self.get_form()
 
         if form.is_valid():
             # Retrieve the current scholar's ID
-            current_scholar: Scholar = request.user.scholar
+            current_scholar: Scholar = self.request.user.scholar
 
             selected_scholarship: Scholarship = form.cleaned_data["scholarship"]
             scholarship: set[Scholarship] = current_scholar.scholarship_set.get(
@@ -85,7 +94,7 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
             # Redirect to the success page
             return redirect("records_home")
 
-        return self.form_invalid(form)
+        return super().form_invalid(form)
 
     def get_form_kwargs(self) -> dict[str, Any]:
         """Passes the request object to the form class.
