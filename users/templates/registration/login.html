@@ -3,14 +3,14 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-  <div class="card">
+  <div class="card mx-auto" style="width: 400px;">
     <div class="card-body">
 
-    <h5 class="card-title">Entrar</h5>
+    <h1 class="card-title h3">Entrar</h1>
       <form method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        {% bootstrap_button button_type='submit' content='Entrar' %}
+        {% bootstrap_button button_type='submit' content='Entrar' button_class='btn btn-primary w-100'%}
       </form>
     </div>
   </div>
