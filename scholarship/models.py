@@ -1,6 +1,4 @@
 from django.db import models
-from django.urls import reverse
-
 
 
 class Project(models.Model):
@@ -14,27 +12,19 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse("project_detail", kwargs={"pk": self.pk})
-
 
 # Create your models here.
 class Scholarship(models.Model):
     description = models.CharField("Descrição", max_length=50)
     value = models.DecimalField("Valor por hora", max_digits=6, decimal_places=2)
 
-    project = models.ForeignKey(
-        Project, verbose_name="Projeto", on_delete=models.PROTECT
-    )
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
-    scholars = models.ManyToManyField('scholar.Scholar', verbose_name="Bolsistas",  blank=True)
+    scholars = models.ManyToManyField("scholar.Scholar", blank=True)
 
     class Meta:
-        verbose_name = "bolsa"
-        verbose_name_plural = "bolsas"
+        verbose_name = "perfil de bolsa"
+        verbose_name_plural = "perfis de bolsas"
 
     def __str__(self):
         return self.description
-
-    def get_absolute_url(self):
-        return reverse("bolsa", kwargs={"pk": self.pk})

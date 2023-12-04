@@ -1,10 +1,10 @@
 from datetime import date, datetime
 from decimal import Decimal
+
 from django.db import models
 
-from scholarship.models import Scholarship
-
 from scholar.models import Scholar
+from scholarship.models import Scholarship
 
 
 class Record(models.Model):
@@ -15,12 +15,8 @@ class Record(models.Model):
     start = models.TimeField("Hora inicial", auto_now=False, auto_now_add=False)
     end = models.TimeField("Hora final", auto_now=False, auto_now_add=False)
 
-    scholar = models.ForeignKey(
-        Scholar, verbose_name="Bolsista", on_delete=models.PROTECT
-    )
-    scholarship = models.ForeignKey(
-        Scholarship, verbose_name="Bolsa", on_delete=models.PROTECT
-    )
+    scholar = models.ForeignKey(Scholar, on_delete=models.PROTECT)
+    scholarship = models.ForeignKey(Scholarship, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "registro de atividade"
@@ -28,7 +24,9 @@ class Record(models.Model):
 
     @property
     def total_value(self):
-        return self.scholarship.value * Decimal(self.ellapsed_time.total_seconds() / 3600)
+        return self.scholarship.value * Decimal(
+            self.ellapsed_time.total_seconds() / 3600
+        )
 
     @property
     def ellapsed_time(self):

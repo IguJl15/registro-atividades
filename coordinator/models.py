@@ -1,6 +1,7 @@
 from django.db import models
 from scholar.models import Scholar
 
+
 class Coordinator(Scholar):
     is_coordinator = models.BooleanField("Coordenador", default=True)
 

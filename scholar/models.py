@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.urls import reverse
 
@@ -6,7 +5,13 @@ from users.models import CustomUser
 
 
 class Scholar(models.Model):
-    user = models.OneToOneField(CustomUser, verbose_name="Usuário", on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(
+        CustomUser,
+        verbose_name="Usuário",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     name = models.CharField(verbose_name="Nome", max_length=250)
     email = models.EmailField("Email", unique=True)
 
@@ -20,9 +25,6 @@ class Scholar(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_absolute_url(self):
-        return reverse("bolsistas", kwargs={"pk": self.pk})
 
 
 class Weekday(models.TextChoices):
@@ -38,20 +40,17 @@ class Weekday(models.TextChoices):
 class InstitutionalSchedule(models.Model):
     user = models.ForeignKey(Scholar, on_delete=models.CASCADE)
 
-    week_day = models.CharField(max_length=2, choices=Weekday.choices)
+    week_day = models.CharField("dia", max_length=2, choices=Weekday.choices)
 
     start = models.TimeField("Hora inicial", auto_now=False, auto_now_add=False)
     end = models.TimeField("Hora final", auto_now=False, auto_now_add=False)
 
     class Meta:
-        verbose_name = "Horário Institucional"
-        verbose_name_plural = "Horários Institucionais"
+        verbose_name = "horário institucional"
+        verbose_name_plural = "horários institucionais"
 
     def __str__(self):
         return f"{self.week_day}: {self.start}:{self.end}"
-
-    def get_absolute_url(self):
-        return reverse("InstitutionalSchedule_detail", kwargs={"pk": self.pk})
 
 
 class Bank(models.Model):
@@ -60,14 +59,11 @@ class Bank(models.Model):
     name = models.CharField("Nome", max_length=150)
 
     class Meta:
-        verbose_name = "Banco"
-        verbose_name_plural = "Bancos"
+        verbose_name = "banco"
+        verbose_name_plural = "bancos"
 
     def __str__(self):
         return self.name
-
-    def get_absolute_url(self):
-        return reverse("banks", kwargs={"pk": self.pk})
 
 
 class BankingInfo(models.Model):
@@ -76,21 +72,19 @@ class BankingInfo(models.Model):
         POUPANCA = "PP", "Poupança"
 
     user = models.OneToOneField(Scholar, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, choices=BankAccountType.choices)
-    account_number = models.CharField(max_length=50)
 
-    bank = models.ForeignKey(Bank, verbose_name="Banco", on_delete=models.PROTECT)
-    agency_number = models.CharField(max_length=10)
+    type = models.CharField("tipo", max_length=2, choices=BankAccountType.choices)
+    account_number = models.CharField("número da conta", max_length=50)
+
+    bank = models.ForeignKey(Bank, on_delete=models.PROTECT)
+    agency_number = models.CharField("agência", max_length=10)
 
     class Meta:
-        verbose_name = "Dados bancários"
-        verbose_name_plural = "Dados bancários"
+        verbose_name = "dados bancários"
+        verbose_name_plural = "dados bancários"
 
     def __str__(self):
         return self.account_number
-
-    def get_absolute_url(self):
-        return reverse("bancos", kwargs={"pk": self.pk})
 
 
 class Address(models.Model):
@@ -98,9 +92,9 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=8, verbose_name="CEP")
 
     locality = models.CharField(
-        verbose_name="Logradouro", name="street", max_length=250
+        verbose_name="logradouro", name="street", max_length=250
     )
-    number = models.CharField(verbose_name="Nº", max_length=10)
+    number = models.CharField(verbose_name="Número ou apt", max_length=10)
 
     state = models.CharField(verbose_name="Estado", max_length=250)
 
@@ -111,15 +105,12 @@ class Address(models.Model):
     def __str__(self):
         return self.postal_code
 
-    def get_absolute_url(self):
-        return reverse("Address_detail", kwargs={"pk": self.pk})
-
 
 class PersonalData(models.Model):
     user = models.OneToOneField(Scholar, on_delete=models.CASCADE)
     rg = models.CharField(verbose_name="RG", unique=True, max_length=100)
     phone = models.CharField("Telefone", max_length=50)
-    birthday = models.DateField("Nascimento")
+    birthday = models.DateField("data de nascimento")
 
     class Meta:
         verbose_name = "Dados pessoais"
@@ -127,6 +118,3 @@ class PersonalData(models.Model):
 
     def __str__(self):
         return self.rg
-
-    def get_absolute_url(self):
-        return reverse("PersonalData_detail", kwargs={"pk": self.pk})
