@@ -1,9 +1,9 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
+from django import forms
 from django.db.models import QuerySet
-from django.forms import ModelChoiceField, ModelForm, TimeInput
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import CreateView, ListView
@@ -14,12 +14,12 @@ from scholar.models import Scholar
 from scholarship.models import Scholarship
 
 
-class ScholarshipsChoiceField(ModelChoiceField):
+class ScholarshipsChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, member):
         return f"{member.description} ({member.project.name})"
 
 
-class RecordCreateForm(ModelForm):
+class RecordCreateForm(forms.ModelForm):
     scholarship = ScholarshipsChoiceField(
         queryset=Scholarship.objects.none(), empty_label=None, label="Bolsa"
     )
@@ -27,7 +27,11 @@ class RecordCreateForm(ModelForm):
     class Meta:
         model = Record
         fields = ["description", "date", "start", "end", "scholarship"]
-        widgets = {"start": TimeInput(), "end": TimeInput()}
+        widgets = {
+            "date": forms.DateTimeInput(attrs={"type": "date"}),
+            "start": forms.TimeInput(attrs={"type": "time"}),
+            "end": forms.TimeInput(attrs={"type": "time"}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -46,6 +50,11 @@ class RecordCreateForm(ModelForm):
 class RecordCreateView(ScholarRequiredMixin, CreateView):
     model = Record
     form_class = RecordCreateForm
+    initial = {
+        "start": "08:00",
+        "end": "12:00",
+        "date": datetime.now(),
+    }
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         form = self.get_form()

@@ -1,5 +1,6 @@
 from django import forms
-from scholar.models import PersonalData, BankingInfo, Address, Scholar
+
+from scholar.models import Address, BankingInfo, PersonalData, Scholar
 from scholarship.models import Scholarship
 
 
@@ -15,8 +16,8 @@ class ScholarForm(forms.ModelForm):
 
     class Meta:
         model = Scholar
-        fields =  "__all__"
-        exclude = ['user']
+        fields = "__all__"
+        exclude = ["user"]
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -32,6 +33,13 @@ class ScholarForm(forms.ModelForm):
             )
             scholarships = Scholarship.objects.filter(project__in=coordinator_projects)
             self.fields["scholarship"].queryset = scholarships.order_by("project__name")
+
+
+class ExistingScholarForm(ScholarForm):
+    class Meta(ScholarForm.Meta):
+        model = Scholar
+        field = ["name", "cpf"]
+        exclude = ["user", "email"]
 
 
 class PersonalDataForm(forms.ModelForm):
