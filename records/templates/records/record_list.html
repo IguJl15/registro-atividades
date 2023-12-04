@@ -1,6 +1,8 @@
 {% extends 'index.html' %}
 
 {% load django_bootstrap5 %}
+{% load humanize %}
+{% load utils %}
 
 {% block page_title %}
   <div class="d-flex flex-row flex-wrap justify-content-center align-items-center">
@@ -16,52 +18,80 @@
 {% endblock %}
 
 {% block content %}
-  <form method="get" class="form card">
-    <div class="card-body">
-      <div class="card-title d-flex flex-row flex-wrap justify-content-between align-items-center">
-        <h5 class="">Filtros</h5>
-        <div class="d-grid gap-2 flex-shrink-1">
-          <button type="submit" class="btn btn-outline-primary">Filtrar</button>
-        </div>
+  <form method="get" class="form border rounded-3 my-2 p-2">
+    <div class="card-title d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <h5 class="">Filtros</h5>
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row flex-wrap gap-2 flex-grow-1">
+      <div>
+        <label for="scholarship" class="form-label mb-1">Bolsa:</label>
+        <select class="form-select" id="scholarship" name="scholarship">
+          <option value="">Todos as bolsas</option>
+          {% for scholarship in scholarships_list %}
+            <option value="{{ scholarship.pk }}">{{ scholarship.description }}</option>
+          {% endfor %}
+        </select>
       </div>
 
-      <div class="pb-3 d-flex flex-row flex-wrap gap-2">
-        <div class="d-flex flex-wrap">
-          <label for="scholarship" class="form-label">Bolsa:</label>
-          <select class="form-select" id="scholarship" name="scholarship">
-            <option value="">Todos as bolsas</option>
-            {% for scholarship in scholarships_list %}
-              <option value="{{ scholarship.pk }}">{{ scholarship.description }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="d-flex flex-wrap">
-          <label for="date" class="form-label">Mês:</label>
-          <input type="month" class="form-control" id="date" name="date" />
-        </div>
+      <div>
+        <label for="date" class="form-label mb-1">Mês:</label>
+        <input type="month" class="form-control" id="date" name="date" />
       </div>
     </div>
   </form>
+  <div class="border rounded-3 my-2">
+    <div class="d-flex m-2 align-items-center justify-content-between">
+      <h3 class="w-auto">Ativdades registradas</h3>
+      <div class="d-flex gap-2 w-auto">
+        <div class="total_hint px-2 py-1 border rounded-2 fs-6">
+          <span>Tempo total:</span>
+          <br />
+          <strong>{{ total_hours|ellapsed_time }}</strong>
+        </div>
+        <div class="total_hint px-2 py-1 border rounded-2 fs-6">
+          <span>Valor total:</span>
+          <br />
+          <strong>{{ total_value|currency }}</strong>
+        </div>
+      </div>
+    </div>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Atvidade</th>
-        <th scope="col">Data</th>
-        <th scope="col">Horário</th>
-        <th scope="col">Bolsa</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for record in object_list %}
+    <table class="table table-striped caption-top">
+      {% comment %} <caption>Lista de registros</caption> {% endcomment %}
+      <thead>
         <tr>
-          <td>{{ record.description }}</td>
-          <td>{{ record.date|date:'d/m/Y' }}</td>
-          <td>{{ record.start }}-{{ record.end }}</td>
-          <td>{{ record.scholarship.description }}</td>
+          <th style="width: 70px;" scope="col">Data</th>
+          <th scope="col">Atvidade</th>
+          <th scope="col">Horário</th>
+          <th scope="col">Bolsa</th>
+          <th scope="col">Duração</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Valor total</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for record in object_list %}
+          <tr>
+            <td>{{ record.date|date:'d/m/Y' }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.start }}-{{ record.end }}</td>
+            <td>{{ record.scholarship.description }}</td>
+            <td>{{ record.ellapsed_time|ellapsed_time }}</td>
+            <td>{{ record.scholarship.value|currency }}</td>
+            <td>{{ record.total_value|currency }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <style>
+    .total_hint {
+      min-width: 150px;
+    }
+  </style>
 {% endblock %}

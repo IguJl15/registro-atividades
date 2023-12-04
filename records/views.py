@@ -1,3 +1,5 @@
+from datetime import timedelta
+from decimal import Decimal
 from typing import Any
 
 from django.db.models import QuerySet
@@ -113,4 +115,12 @@ class RecordListView(ScholarRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         context["scholarships_list"] = self.request.user.scholar.scholarship_set.all()
+
+        records: QuerySet = self.object_list
+
+        context["total_hours"] = sum(
+            [rec.ellapsed_time for rec in records], timedelta(0, 0, 0, 0, 0, 0, 0)
+        )
+        context["total_value"] = sum([rec.total_value for rec in records], Decimal(0))
+
         return context
