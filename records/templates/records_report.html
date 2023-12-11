@@ -3,76 +3,149 @@
 {% load django_bootstrap5 %}
 {% load humanize %}
 {% load utils %}
+{% load static %}
 
 {% block content %}
-  <div class="d-flex flex-column border shadow p-2" style="aspect-ratio: calc(21 / 29.7);">
+  <div class="d-flex flex-column border shadow p-2" style="aspect-ratio: calc(21 / 29.7); width: 21cm">
     <style>
+      .info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        align-self: stretch;
+        border-radius: 8px;
+        overflow: hidden;
       
-      .personal_info_div {
-      
-        border: solid 1px #ddd;
-        
-        & >div {
+        & .info__header {
           display: flex;
-          width: 100%;
-          border-bottom: solid 1px #ddd;
-          
-        }
-
-        & >*:nth-child(2) {
-          border-top: solid 1px #ddd;
-
-        }
-
-        & > div:nth-child(even) {
-          background-color: #F4F4F4;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+      
+          border-radius: 8px 0px 0px 0px;
+      
+          & .info__title {
+            padding: 0.5rem 0.25rem;
+            border-radius: 8px 8px 0px 0px;
+            background: rgba(0, 0, 0, 0.03);
+          }
+      
+          & .info__role {
+            padding: 0.5rem 0.25rem;
+          }
         }
       
-        & .thirds>.field {
-          > .value {
-            font-weight: 600;
+        & .info__body {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          align-self: stretch;
+      
+          background: rgba(0, 0, 0, 0.03);
+      
+          & td,
+          h4 {
+            padding-left: 0.5rem;
           }
-          width: 33.333%;
+      
+          & td {
+            width: 50%;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
         }
       }
     </style>
-    <div class="text-center mb-3">
-      <h1 class="h2">
-        {% block bootstrap5_title %}
-          Relatório de registros de atividade
-        {% endblock %}
-      </h1>
-      <span>Cabeçalho do relatório</span>
+    <div class="header">
+      <img src="{% static '/logo.png' %}" />
+      <div class="text-center mb-3">
+        <h1 class="h2">
+          {% block bootstrap5_title %}
+            Relatório de registros de atividade
+          {% endblock %}
+        </h1>
+        <span>Cabeçalho do relatório</span>
+      </div>
     </div>
 
-    <h4 class="h5">Dados do colaborador</h4>
-    <div class="mb-3 personal_info_div">
-      <h5 class="h6">Dados Pessoais</h5>
-      <div>
-        <span class="field">Nome: <span class="value">{{ user.scholar.name }}</span></span>
+    <div class="info">
+      <div class="info__header">
+        <div class="info__title">
+          Colaborador: <b>{{ user.scholar.name }}</b>
+        </div>
+        <div class="info__role">
+          Função: <b>Desenvolvedor Mobile</b>
+        </div>
+      </div>
+      <div class="info__body">
+        <div class="info__personal">
+          <table class="table table-sm table-striped">
+            <tr></tr>
+            <tr>
+              <td>
+                CPF: <b>{{ user.scholar.cpf }}</b>
+              </td>
+              <td>
+                PIS/PASEP: <b>-</b>
+                {% comment %} {{ user.scholar.personaldata.pis_pasep }} {% endcomment %}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                RG: <b>{{ user.scholar.personaldata.rg }}</b>
+              </td>
+              {% comment %}TODO: Make it only appear to instructors{% endcomment %}
+              <td>
+                Matrúcla SIAPE: <b>-</b>
+                {% comment %} {{ user.scholar.personaldata.pis_pasep }} {% endcomment %}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Endereço: <b>{{ user.scholar.address.street }}</b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                CEP: <b>{{ user.scholar.address.postal_code }}</b>
+              </td>
+              <td>
+                Estado: <b>{{ user.scholar.address.state }}</b>
+                {% comment %} {{ user.scholar.address.city }} {% endcomment %}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="info__divider"></div>
+        <h4 class="h6">Dados Bancários</h4>
+        <div class="info__bank">
+          <table class="table table-sm table-striped">
+            <tr></tr>
+            <tr>
+              <td>
+                Banco: <b>{{ user.scholar.bankinginfo.bank.name }}</b>
+              </td>
+              <td>
+                Tipo de Conta: <b>{{ user.scholar.bankinginfo.get_type_display }}</b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Agência: <b>{{ user.scholar.bankinginfo.agency_number }}</b>
+              </td>
+              <td>
+                Nº da Conta: <b>{{ user.scholar.bankinginfo.account_number }}</b>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
 
-      </div>
-      <div class="thirds">
-        <span class="field">CPF: <span class="value">{{ user.scholar.cpf }}</span></span>
-        <span class="field">RG: <span class="value">{{ user.scholar.personaldata.rg }}</span></span>
-      </div>
-      <div class="thirds">
-        <span class="field">Endereço: <span value="value">{{ user.scholar.address.street }}</span></span>
-        <span class="field">CEP: <span class="value">{{ user.scholar.address.postal_code }}</span></span>
-      </div>
-      <div class="thirds">
-        <span class="field">Bairro: <span class="value">Angelim (hardcoded)</span></span>
-        <span class="field">Cidade: <span class="value">Teresina (Hardcoded)</span></span>
-        <span class="field">Estado: <span class="value">{{ user.scholar.address.state }}</span></span>
-      </div>
-      <br />
-
-      <h5 class="h6">Dados Bancários</h5>
-      <div class="thirds">
-        <span class="field">Conta: <span class="value">{{ user.scholar.bankinginfo.get_type_display }}: {{ user.scholar.bankinginfo.account_number }}</span></span>
-        <span class="field">Banco: <span class="value">{{ user.scholar.bankinginfo.bank.name }}</span></span>
-        <span class="field" style="place-self: end;">Agência: <span class="value">{{ user.scholar.bankinginfo.agency_number }}</span></span>
-      </div>
+    <div>
+      <p>
+        Pelo presente documento, eu <b>{{ user.scholar.name }}</b> declaro ter participado das atividades desenvolvidas no âmbito da Bolsa Formação do UAB - UNIVERSIDADE ABERTO DO BRASIL, dealhamento abaixo:
+      </p>
     </div>
 
     <table class="table table-striped caption-top table-borderless">
@@ -81,7 +154,6 @@
           <th style="width: 70px;" scope="col">Data</th>
           <th scope="col">Atvidade</th>
           <th scope="col">Horário</th>
-          <th scope="col">Bolsa</th>
           <th scope="col">Duração</th>
           <th scope="col">Valor total</th>
         </tr>
@@ -92,7 +164,6 @@
             <td>{{ record.date|date:'d/m/Y' }}</td>
             <td>{{ record.description }}</td>
             <td>{{ record.start }}-{{ record.end }}</td>
-            <td>{{ record.scholarship.description }}</td>
             <td>{{ record.ellapsed_time|ellapsed_time }}</td>
             <td>{{ record.total_value|currency }}</td>
           </tr>
