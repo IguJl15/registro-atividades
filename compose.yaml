@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRESQL_DATABASE=registros_uab
+      - POSTGRESQL_USERNAME=myuser
+      - POSTGRESQL_PASSWORD=secret
+      - POSTGRESQL_POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./database_data:/bitnami/postgresql
+    ports:
+      - 5432:5432
+    networks:
+      - app-tier
+networks:
+  app-tier:
+    driver: bridge

@@ -142,3 +142,8 @@ class RecordListView(ScholarRequiredMixin, ListView):
         context["total_value"] = sum([rec.total_value for rec in records], Decimal(0))
 
         return context
+
+
+class RecordReportView(RecordListView):
+    template_name = "records_report.html"
+    template_name_suffix = ""

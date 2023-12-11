@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+{% load humanize %}
+{% load utils %}
+
+{% block content %}
+  <div class="d-flex flex-column border shadow p-2" style="aspect-ratio: calc(21 / 29.7);">
+    <style>
+      
+      .personal_info_div {
+      
+        border: solid 1px #ddd;
+        
+        & >div {
+          display: flex;
+          width: 100%;
+          border-bottom: solid 1px #ddd;
+          
+        }
+
+        & >*:nth-child(2) {
+          border-top: solid 1px #ddd;
+
+        }
+
+        & > div:nth-child(even) {
+          background-color: #F4F4F4;
+        }
+      
+        & .thirds>.field {
+          > .value {
+            font-weight: 600;
+          }
+          width: 33.333%;
+        }
+      }
+    </style>
+    <div class="text-center mb-3">
+      <h1 class="h2">
+        {% block bootstrap5_title %}
+          Relatório de registros de atividade
+        {% endblock %}
+      </h1>
+      <span>Cabeçalho do relatório</span>
+    </div>
+
+    <h4 class="h5">Dados do colaborador</h4>
+    <div class="mb-3 personal_info_div">
+      <h5 class="h6">Dados Pessoais</h5>
+      <div>
+        <span class="field">Nome: <span class="value">{{ user.scholar.name }}</span></span>
+
+      </div>
+      <div class="thirds">
+        <span class="field">CPF: <span class="value">{{ user.scholar.cpf }}</span></span>
+        <span class="field">RG: <span class="value">{{ user.scholar.personaldata.rg }}</span></span>
+      </div>
+      <div class="thirds">
+        <span class="field">Endereço: <span value="value">{{ user.scholar.address.street }}</span></span>
+        <span class="field">CEP: <span class="value">{{ user.scholar.address.postal_code }}</span></span>
+      </div>
+      <div class="thirds">
+        <span class="field">Bairro: <span class="value">Angelim (hardcoded)</span></span>
+        <span class="field">Cidade: <span class="value">Teresina (Hardcoded)</span></span>
+        <span class="field">Estado: <span class="value">{{ user.scholar.address.state }}</span></span>
+      </div>
+      <br />
+
+      <h5 class="h6">Dados Bancários</h5>
+      <div class="thirds">
+        <span class="field">Conta: <span class="value">{{ user.scholar.bankinginfo.get_type_display }}: {{ user.scholar.bankinginfo.account_number }}</span></span>
+        <span class="field">Banco: <span class="value">{{ user.scholar.bankinginfo.bank.name }}</span></span>
+        <span class="field" style="place-self: end;">Agência: <span class="value">{{ user.scholar.bankinginfo.agency_number }}</span></span>
+      </div>
+    </div>
+
+    <table class="table table-striped caption-top table-borderless">
+      <thead>
+        <tr>
+          <th style="width: 70px;" scope="col">Data</th>
+          <th scope="col">Atvidade</th>
+          <th scope="col">Horário</th>
+          <th scope="col">Bolsa</th>
+          <th scope="col">Duração</th>
+          <th scope="col">Valor total</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for record in object_list %}
+          <tr>
+            <td>{{ record.date|date:'d/m/Y' }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.start }}-{{ record.end }}</td>
+            <td>{{ record.scholarship.description }}</td>
+            <td>{{ record.ellapsed_time|ellapsed_time }}</td>
+            <td>{{ record.total_value|currency }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

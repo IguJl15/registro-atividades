@@ -1,0 +1,16 @@
+
+{% extends 'django_bootstrap5/bootstrap5.html' %}
+
+{% comment %} BASE HTML WITHOUT NAVIGATION {% endcomment %}
+
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+  <main role="main" class="d-flex flex-column align-items-center py-4 bg-body-tertiary h-100", style="min-height: 100vh;">
+
+
+    {% block content %}
+
+    {% endblock %}
+  </main>
+{% endblock %}
