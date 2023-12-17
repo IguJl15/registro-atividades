@@ -1,14 +1,16 @@
-
 {% extends 'django_bootstrap5/bootstrap5.html' %}
 
-{% comment %} BASE HTML WITHOUT NAVIGATION {% endcomment %}
+{% comment %}BASE HTML WITHOUT NAVIGATION{% endcomment %}
 
 {% load django_bootstrap5 %}
+{% load static %}
+
+{% block bootstrap5_extra_head %}
+  <link rel="shortcut icon" href="{% static 'favicon.png' %}" type="image/x-icon" />
+{% endblock %}
 
 {% block bootstrap5_content %}
-  <main role="main" class="d-flex flex-column align-items-center py-4 bg-body-tertiary h-100", style="min-height: 100vh;">
-
-
+  <main role="main" class="d-flex flex-column align-items-center py-4 bg-body-tertiary h-100" style="min-height: 100vh;">
     {% block content %}
 
     {% endblock %}
