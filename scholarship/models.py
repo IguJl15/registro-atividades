@@ -22,6 +22,8 @@ class Scholarship(models.Model):
 
     scholars = models.ManyToManyField("scholar.Scholar", blank=True)
 
+    max_hours = models.IntegerField("horas mensais")
+
     class Meta:
         verbose_name = "perfil de bolsa"
         verbose_name_plural = "perfis de bolsas"

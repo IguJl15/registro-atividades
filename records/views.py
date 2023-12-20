@@ -37,7 +37,36 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
                 id=selected_scholarship.id
             )
             if not scholarship:
+                form.add_error(None, f"{Scholarship._meta.verbose_name} não disponível")
                 return self.form_invalid(form)
+
+            # Check maximo de horas por bolsa
+            records_in_scholarship = Record.objects.filter(
+                scholarship=selected_scholarship, scholar=current_scholar
+            )
+            total_hours_in_scholarship = sum(
+                [rec.ellapsed_time for rec in records_in_scholarship],
+                timedelta(0, 0, 0, 0, 0, 0, 0),
+            )
+
+            max_time_in_scholarship = timedelta(
+                0, 0, 0, 0, 0, selected_scholarship.max_hours, 0
+            )
+
+            if (
+                total_hours_in_scholarship >= max_time_in_scholarship
+                or total_hours_in_scholarship
+                + Record.calculate_difference(
+                    form.cleaned_data["start"], form.cleaned_data["end"]
+                )
+                > max_time_in_scholarship
+            ):
+                form.add_error(
+                    None,
+                    f"O limite de horas na {Scholarship._meta.verbose_name} selecionada foi atingido",
+                )
+                return self.form_invalid(form)
+
             # Create a new Record instance
             record = Record(
                 description=form.cleaned_data["description"],
@@ -72,7 +101,8 @@ class RecordDeleteView(ScholarRequiredMixin, DeleteView):
     def get_queryset(self) -> QuerySet[Any]:
         current_scholar = self.request.user.scholar
         return Record.objects.filter(scholar=current_scholar)
-    
+
+
 class RecordUpdateView(ScholarRequiredMixin, UpdateView):
     model = Record
     form_class = RecordCreateForm
@@ -81,7 +111,7 @@ class RecordUpdateView(ScholarRequiredMixin, UpdateView):
     def get_queryset(self) -> QuerySet[Any]:
         current_scholar = self.request.user.scholar
         return Record.objects.filter(scholar=current_scholar)
-    
+
     def get_form_kwargs(self) -> dict[str, Any]:
         """Passes the request object to the form class.
         This is necessary to only display members that belong to a given user"""
@@ -89,6 +119,7 @@ class RecordUpdateView(ScholarRequiredMixin, UpdateView):
         kwargs["request"] = self.request
 
         return kwargs
+
 
 class RecordListView(ScholarRequiredMixin, ListView):
     model = Record
@@ -131,6 +162,7 @@ class RecordReportView(RecordListView):
     template_name = "records_report.html"
     template_name_suffix = ""
 
+
 class ReportFormView(FormView):
     template_name = "report_form.html"
     form_class = ReportCreateForm
@@ -144,16 +176,15 @@ class ReportFormView(FormView):
         kwargs["request"] = self.request
 
         return kwargs
-    
-    
+
     def form_valid(self, form: form_class):
         current_scholar = self.request.user.scholar
 
         queryset = Record.objects.filter(scholar=current_scholar).order_by("-date")
-        
+
         project_id = self.request.POST.get("scholarship", None)
         queryset = queryset.filter(scholarship__id__in=project_id)
-        
+
         date = form.data["date"]
         year = int(date.split("-")[0])
         month = int(date.split("-")[1])
@@ -162,25 +193,25 @@ class ReportFormView(FormView):
 
         context = self.get_context_data(records=queryset)
 
-        response = PDFTemplateResponse(request=self.request,
-                                       template="records_report.html",
-                                       filename="relatorio_de_ativdades.pdf",
-                                       context=context,
-                                       show_content_in_browser=True,
-                                       cmd_options={"enable-local-file-access": None, "verbose": None},
-                                       )
+        response = PDFTemplateResponse(
+            request=self.request,
+            template="records_report.html",
+            filename="relatorio_de_ativdades.pdf",
+            context=context,
+            show_content_in_browser=True,
+            cmd_options={"enable-local-file-access": None, "verbose": None},
+        )
         return response
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if "records" not in kwargs:
             return context
-        
+
         records: QuerySet = kwargs["records"]
-        
-        context['object_list'] = records
+
+        context["object_list"] = records
 
         context["total_hours"] = sum(
             [rec.ellapsed_time for rec in records], timedelta(0, 0, 0, 0, 0, 0, 0)
@@ -189,9 +220,9 @@ class ReportFormView(FormView):
 
         return context
 
-    
     def form_invalid(self, form: Any) -> HttpResponse:
         return self.form_valid(form)
+
 
 class TestePdfView(PDFTemplateView):
     filename = None
@@ -219,7 +250,6 @@ class TestePdfView(PDFTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
 
         context["scholarships_list"] = self.request.user.scholar.scholarship_set.all()
 

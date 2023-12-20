@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone, time
 from decimal import Decimal
 
 from django.db import models
@@ -31,10 +31,13 @@ class Record(models.Model):
 
     @property
     def ellapsed_time(self):
+        return Record.calculate_difference(self.start, self.end)
+
+    def calculate_difference(start: time, end: time):
         # https://stackoverflow.com/questions/21774302/how-do-i-calculate-the-time-difference-in-a-django-template
         dummydate = date(2000, 1, 1)  # Needed to convert time to a datetime object
-        dt1 = datetime.combine(dummydate, self.start)
-        dt2 = datetime.combine(dummydate, self.end)
+        dt1 = datetime.combine(dummydate, start)
+        dt2 = datetime.combine(dummydate, end)
 
         return dt2 - dt1
 
