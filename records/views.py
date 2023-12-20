@@ -3,16 +3,16 @@ from decimal import Decimal
 from typing import Any
 
 from django.db.models import QuerySet
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from wkhtmltopdf.views import PDFTemplateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, FormView
+from wkhtmltopdf.views import PDFTemplateView, PDFTemplateResponse
 
 from scholar.access_mixins import ScholarRequiredMixin
 from scholar.models import Scholar
 from scholarship.models import Scholarship
 
-from .forms import RecordCreateForm
+from .forms import RecordCreateForm, ReportCreateForm
 from .models import Record
 
 
@@ -98,12 +98,10 @@ class RecordListView(ScholarRequiredMixin, ListView):
         current_scholar = self.request.user.scholar
         project_id = self.request.GET.get("scholarship", None)
 
+        queryset = Record.objects.filter(scholar=current_scholar).order_by("-date")
+
         if project_id:
-            queryset = Record.objects.filter(
-                scholar=current_scholar, scholarship__id__in=project_id
-            )
-        else:
-            queryset = Record.objects.filter(scholar=current_scholar)
+            queryset = queryset.filter(scholarship__id__in=project_id)
 
         date = self.request.GET.get("date", None)
 
@@ -133,6 +131,67 @@ class RecordReportView(RecordListView):
     template_name = "records_report.html"
     template_name_suffix = ""
 
+class ReportFormView(FormView):
+    template_name = "report_form.html"
+    form_class = ReportCreateForm
+    initial = {"date": datetime.now()}
+    success_url = "/registros"
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Passes the request object to the form class.
+        This is necessary to only display members that belong to a given user"""
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+
+        return kwargs
+    
+    
+    def form_valid(self, form: form_class):
+        current_scholar = self.request.user.scholar
+
+        queryset = Record.objects.filter(scholar=current_scholar).order_by("-date")
+        
+        project_id = self.request.POST.get("scholarship", None)
+        queryset = queryset.filter(scholarship__id__in=project_id)
+        
+        date = form.data["date"]
+        year = int(date.split("-")[0])
+        month = int(date.split("-")[1])
+
+        queryset = queryset.filter(date__month=month, date__year=year)
+
+        context = self.get_context_data(records=queryset)
+
+        response = PDFTemplateResponse(request=self.request,
+                                       template="records_report.html",
+                                       filename="relatorio_de_ativdades.pdf",
+                                       context=context,
+                                       show_content_in_browser=True,
+                                       cmd_options={"enable-local-file-access": None, "verbose": None},
+                                       )
+        return response
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if "records" not in kwargs:
+            return context
+        
+        records: QuerySet = kwargs["records"]
+        
+        context['object_list'] = records
+
+        context["total_hours"] = sum(
+            [rec.ellapsed_time for rec in records], timedelta(0, 0, 0, 0, 0, 0, 0)
+        )
+        context["total_value"] = sum([rec.total_value for rec in records], Decimal(0))
+
+        return context
+
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        return self.form_valid(form)
 
 class TestePdfView(PDFTemplateView):
     filename = None
@@ -144,12 +203,10 @@ class TestePdfView(PDFTemplateView):
         current_scholar = self.request.user.scholar
         project_id = self.request.GET.get("scholarship", None)
 
+        queryset = Record.objects.filter(scholar=current_scholar).order_by("-date")
+
         if project_id:
-            queryset = Record.objects.filter(
-                scholar=current_scholar, scholarship__id__in=project_id
-            )
-        else:
-            queryset = Record.objects.filter(scholar=current_scholar)
+            queryset = queryset.filter(scholarship__id__in=project_id)
 
         date = self.request.GET.get("date", None)
 
@@ -163,7 +220,6 @@ class TestePdfView(PDFTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["object_list"] = self.get_queryset()
 
         context["scholarships_list"] = self.request.user.scholar.scholarship_set.all()
 

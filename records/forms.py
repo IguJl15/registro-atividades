@@ -50,3 +50,21 @@ class RecordCreateForm(forms.ModelForm):
             return False
 
         return super().is_valid()
+
+
+class ReportCreateForm(forms.Form):
+    date = forms.DateTimeField(label="Mês de referência", required=True, widget=forms.DateTimeInput(attrs={"type": "month"}, format="%Y-%m"))
+    scholarship = ScholarshipsChoiceField(label="Bolsa", required=True, queryset=Scholarship.objects.none(), empty_label=None)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        super().__init__(*args, **kwargs)
+
+        current_scholar: Scholar
+        # If the scholar is not available, use the current user's scholar
+        if self.request.user.scholar is not None:
+            current_scholar = self.request.user.scholar
+            # Limit the scholarship choices to the current user's scholar's scholarships
+            scholarships: QuerySet = current_scholar.scholarship_set.all()
+            self.fields["scholarship"].queryset = scholarships.order_by("project__name")

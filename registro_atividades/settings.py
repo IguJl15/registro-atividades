@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    'easy_pdf',
     "django_bootstrap5",
     "scholar.apps.ScholarConfig",
     "scholarship.apps.ScholarshipConfig",
