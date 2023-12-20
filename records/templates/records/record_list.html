@@ -86,8 +86,9 @@
             <td>{{ record.scholarship.value|currency }}</td>
             <td>{{ record.total_value|currency }}</td>
             <td style="width: 0%">
-              {% if record.can_delete %}
+              {% if record.can_modify %}
                 <a class="badge rounded-pill text-bg-danger" href="{% url 'delete' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">delete</span></a>
+                <a class="badge rounded-pill text-bg-secondary" href="{% url 'edit' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">edit</span></a>
               {% endif %}
             </td>
           </tr>

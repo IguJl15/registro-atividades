@@ -1,11 +1,11 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import CreateView, DeleteView, ListView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from wkhtmltopdf.views import PDFTemplateView
 
 from scholar.access_mixins import ScholarRequiredMixin
@@ -20,6 +20,7 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
     model = Record
     form_class = RecordCreateForm
     initial = {
+        "date": datetime.now(),
         "start": "08:00",
         "end": "12:00",
     }
@@ -71,6 +72,22 @@ class RecordDeleteView(ScholarRequiredMixin, DeleteView):
     def get_queryset(self) -> QuerySet[Any]:
         current_scholar = self.request.user.scholar
         return Record.objects.filter(scholar=current_scholar)
+    
+class RecordUpdateView(ScholarRequiredMixin, UpdateView):
+    model = Record
+    form_class = RecordCreateForm    
+
+    def get_queryset(self) -> QuerySet[Any]:
+        current_scholar = self.request.user.scholar
+        return Record.objects.filter(scholar=current_scholar)
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Passes the request object to the form class.
+        This is necessary to only display members that belong to a given user"""
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+
+        return kwargs
 
 class RecordListView(ScholarRequiredMixin, ListView):
     model = Record

@@ -13,14 +13,14 @@ class ScholarshipsChoiceField(forms.ModelChoiceField):
 
 class RecordCreateForm(forms.ModelForm):
     scholarship = ScholarshipsChoiceField(
-        queryset=Scholarship.objects.none(), empty_label=None, label="Bolsa"
+        queryset=Scholarship.objects.none(), empty_label=None
     )
 
     class Meta:
         model = Record
         fields = ["description", "date", "start", "end", "scholarship"]
         widgets = {
-            "date": forms.DateTimeInput(attrs={"type": "date"}),
+            "date": forms.DateTimeInput(attrs={"type": "date"}, format="%Y-%m-%d"),
             "start": forms.TimeInput(attrs={"type": "time"}),
             "end": forms.TimeInput(attrs={"type": "time"}),
         }

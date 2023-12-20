@@ -5,6 +5,7 @@ from records.views import (
     RecordDeleteView,
     RecordListView,
     RecordReportView,
+    RecordUpdateView,
     TestePdfView,
 )
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path("relatorio", RecordReportView.as_view(), name="report"),
     path("pdf", TestePdfView.as_view(), name="pdf"),
     path("delete/<int:pk>/", RecordDeleteView.as_view(), name="delete"),
+    path("edit/<int:pk>/", RecordUpdateView.as_view(), name="edit"),
 ]

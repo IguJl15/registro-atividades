@@ -6,7 +6,7 @@
 {% block page_title %}
     <h2>
         {% block bootstrap5_title %}
-            Novo registro
+            {% if form.instance.id %}Editar registro{% else %}Novo registro{% endif %}
         {% endblock %}
     </h2>
 {% endblock %}

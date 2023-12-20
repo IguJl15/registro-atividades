@@ -39,7 +39,7 @@ class Record(models.Model):
         return dt2 - dt1
 
     @property
-    def can_delete(self):
+    def can_modify(self):
         if not self.created:
             return True
         
