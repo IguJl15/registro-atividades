@@ -78,17 +78,19 @@
       <tbody class="table-group-divider">
         {% for record in object_list %}
           <tr>
-            <td>{{ record.date|date:'d/m/Y' }}</td>
+            <td class="short_td">{{ record.date|date:'d/m/Y' }}</td>
             <td>{{ record.description }}</td>
-            <td>{{ record.scholarship.description }}</td>
-            <td>{{ record.start }}-{{ record.end }}</td>
-            <td>{{ record.ellapsed_time|ellapsed_time }}</td>
-            <td>{{ record.scholarship.value|currency }}</td>
-            <td>{{ record.total_value|currency }}</td>
-            <td style="width: 0%">
+            <td class="normal_td">{{ record.scholarship.description }}</td>
+            <td class="short_td">{{ record.start }}-{{ record.end }}</td>
+            <td class="short_td">{{ record.ellapsed_time|ellapsed_time }}</td>
+            <td class="short_td">{{ record.scholarship.value|currency }}</td>
+            <td class="short_td">{{ record.total_value|currency }}</td>
+            <td class="short_td">
               {% if record.can_modify %}
-                <a class="badge rounded-pill text-bg-danger" href="{% url 'delete' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">delete</span></a>
-                <a class="badge rounded-pill text-bg-secondary" href="{% url 'edit' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">edit</span></a>
+                <div class="d-flex gap-1">
+                  <a class="badge rounded-pill text-bg-danger" href="{% url 'delete' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">delete</span></a>
+                  <a class="badge rounded-pill text-bg-secondary" href="{% url 'edit' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">edit</span></a>
+                </div>
               {% endif %}
             </td>
           </tr>
@@ -99,6 +101,12 @@
   <style>
     .total_hint {
       min-width: 150px;
+    }
+    .normal_td {
+      width: 12%;
+    }
+    .short_td {
+      width: 8%;
     }
   </style>
 {% endblock %}

@@ -39,6 +39,9 @@ class RecordCreateForm(forms.ModelForm):
             self.fields["scholarship"].queryset = scholarships.order_by("project__name")
 
     def is_valid(self) -> bool:
+        if self.instance.id and not self.instance.can_modify:
+            self.add_error(None, f"Este {self.instance._meta.verbose_name} não pode ser modificado")
+            return False
         start = self.data["start"]
         end = self.data["end"]
 

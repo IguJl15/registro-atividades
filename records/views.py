@@ -67,7 +67,7 @@ class RecordCreateView(ScholarRequiredMixin, CreateView):
 
 class RecordDeleteView(ScholarRequiredMixin, DeleteView):
     model = Record
-    success_url = "records_home"
+    success_url = "/registros"
 
     def get_queryset(self) -> QuerySet[Any]:
         current_scholar = self.request.user.scholar
@@ -75,7 +75,8 @@ class RecordDeleteView(ScholarRequiredMixin, DeleteView):
     
 class RecordUpdateView(ScholarRequiredMixin, UpdateView):
     model = Record
-    form_class = RecordCreateForm    
+    form_class = RecordCreateForm
+    success_url = "/registros"
 
     def get_queryset(self) -> QuerySet[Any]:
         current_scholar = self.request.user.scholar
