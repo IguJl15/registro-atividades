@@ -253,7 +253,9 @@ class TestePdfView(PDFTemplateView):
 
         context["scholarships_list"] = self.request.user.scholar.scholarship_set.all()
 
-        records: QuerySet = context["object_list"]
+        records: QuerySet = self.get_queryset()
+        
+        context['object_list'] = records
 
         context["total_hours"] = sum(
             [rec.ellapsed_time for rec in records], timedelta(0, 0, 0, 0, 0, 0, 0)

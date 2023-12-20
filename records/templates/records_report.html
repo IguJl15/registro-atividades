@@ -24,7 +24,7 @@
       flex-shrink: 0;
     }
     
-    .header .header__titles {
+    .header__titles {
       display: -webkit-flex; /* wkhtmltopdf uses this one */
       display: flex;
     
@@ -55,7 +55,7 @@
       border-radius: 8px;
       overflow: hidden;
     }
-    .info .info__header {
+    .info__header {
       display: -webkit-flex; /* wkhtmltopdf uses this one */
       display: flex;
     
@@ -65,17 +65,17 @@
     
       border-radius: 8px 0px 0px 0px;
     }
-    .info__header .info__title {
+    .info__title {
       padding: 0.5rem 0.25rem;
       border-radius: 8px 8px 0px 0px;
       background: rgba(0, 0, 0, 0.03);
     }
     
-    .info__header .info__role {
+    .info__role {
       padding: 0.5rem 0.25rem;
     }
     
-    .info .info__body {
+    .info__body {
       display: -webkit-flex; /* wkhtmltopdf uses this one */
       display: flex;
     
@@ -85,30 +85,22 @@
       background: rgba(0, 0, 0, 0.03);
     }
     
-    .info .info__body td,
-    .info .info__body h4 {
+    .info__body td,
+    .info__body h4 {
       padding-left: 0.5rem;
     }
     
-    .info .info__body td {
+    .info__body td {
       width: 50%;
       padding-top: 0;
       padding-bottom: 0;
     }
     
     .signatures {
-      display: -webkit-flex; /* wkhtmltopdf uses this one */
-      display: flex;
-    
-      padding: 46px 8px 8px 8px;
-      justify-content: center;
-      -webkit-flex-pack: center;
-      align-items: flex-start;
-      align-content: flex-start;
-      gap: 64px;
-      flex-wrap: wrap;
+      display: table;
     }
-    .signatures .signatures__signature {
+    
+    .signatures__signature {
       display: -webkit-flex; /* wkhtmltopdf uses this one */
       display: flex;
     
@@ -121,14 +113,10 @@
       border-top: 1px solid #000;
     }
     
+    .sign__top {
+    }
+    
     .page {
-      display: -webkit-flex; /* wkhtmltopdf uses this one */
-      display: flex;
-    
-      flex-direction: column;
-      align-items: stretch;
-      gap: 24px;
-    
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     
@@ -269,7 +257,7 @@
       </p>
     </div>
 
-    <table class="table table-striped caption-top">
+    <table class="table table-striped caption-top" style="text-align: center;">
       <thead>
         <tr>
           <th style="width: 70px;" scope="col">Data</th>
@@ -306,25 +294,67 @@
         Declaro serem verdadeiras as informações mencionadas que totalizaram <b>{{ total_value|currency }}</b>{% comment %} {{ report_total_value|currency }} {% endcomment %}
       </p>
     </div>
+    <style>
+      .table_signature {
+        margin-top: 2cm;
+        border: solid 0 transparent;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .table_signature td {
+        width: 50%;
+        display: inline-block;
+        height: 3cm;
+        padding-top: 2cm;
+      }
+      
+      .table_signature td > div {
+        margin: auto;
+        width: 80%;
+      }
 
-    <div class="signatures">
-      <div class="signatures__signature">
-        <span>{{ user.scholar.name }}</span>
-        <span>{{ user.scholar.cpf }}</span>
-      </div>
+      .signatures__signature{
+        display: block;
+      }
 
-      <div class="signatures__signature">
-        <span>Coordenador(a) Geral</span>
-      </div>
-      <div class="signatures__signature">
-        <span>Supervisor(a)</span>
-      </div>
-      <div class="signatures__signature">
-        <span>Diretor(a) do Campus</span>
-      </div>
-      <div class="signatures__signature">
-        <span>Coordenador(a) Adjunto</span>
-      </div>
-    </div>
+
+    </style>
+<div>
+  <div style="height: 2cm;"></div>
+  <table class="table_signature" cellspacing="0" cellpadding="0">
+    <tr>
+      <td>
+        <div class="signatures__signature">
+          <div>{{ user.scholar.name }}</div>
+          <div>{{ user.scholar.cpf }}</div>
+        </div>
+      </td>
+      <td>
+        <div class="signatures__signature">
+          <span>Coordenador(a) Geral</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="signatures__signature">
+          <span>Supervisor(a)</span>
+        </div>
+      </td>
+      <td>
+        <div class="signatures__signature">
+          <span>Diretor(a) do Campus</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="signatures__signature" >
+          <span>Coordenador(a) Adjunto</span>
+        </div>
+      </td>
+    </tr>
+  </table></div>
   </div>
 {% endblock %}
