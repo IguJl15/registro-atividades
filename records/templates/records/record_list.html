@@ -67,11 +67,12 @@
         <tr>
           <th style="width: 70px;" scope="col">Data</th>
           <th scope="col">Atvidade</th>
-          <th scope="col">Horário</th>
           <th scope="col">Bolsa</th>
+          <th scope="col">Horário</th>
           <th scope="col">Duração</th>
           <th scope="col">Valor</th>
           <th scope="col">Valor total</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -79,11 +80,16 @@
           <tr>
             <td>{{ record.date|date:'d/m/Y' }}</td>
             <td>{{ record.description }}</td>
-            <td>{{ record.start }}-{{ record.end }}</td>
             <td>{{ record.scholarship.description }}</td>
+            <td>{{ record.start }}-{{ record.end }}</td>
             <td>{{ record.ellapsed_time|ellapsed_time }}</td>
             <td>{{ record.scholarship.value|currency }}</td>
             <td>{{ record.total_value|currency }}</td>
+            <td style="width: 0%">
+              {% if record.can_delete %}
+                <a class="badge rounded-pill text-bg-danger" href="{% url 'delete' pk=record.pk %}" style="text-decoration: none;"><span class="material-symbols-outlined">delete</span></a>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

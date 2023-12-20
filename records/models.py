@@ -1,11 +1,10 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 from django.db import models
 
 from scholar.models import Scholar
 from scholarship.models import Scholarship
-
 
 class Record(models.Model):
     description = models.CharField("Descrição", max_length=250)
@@ -17,6 +16,8 @@ class Record(models.Model):
 
     scholar = models.ForeignKey(Scholar, on_delete=models.PROTECT)
     scholarship = models.ForeignKey(Scholarship, on_delete=models.PROTECT)
+
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "registro de atividade"
@@ -36,6 +37,15 @@ class Record(models.Model):
         dt2 = datetime.combine(dummydate, self.end)
 
         return dt2 - dt1
+
+    @property
+    def can_delete(self):
+        if not self.created:
+            return True
+        
+        days_since_today: timedelta = datetime.now(timezone.utc) - self.created
+        
+        return days_since_today.days <= 30
 
     def __str__(self):
         return self.description

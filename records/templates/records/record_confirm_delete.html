@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+
+
+{% load django_bootstrap5 %}
+
+{% block page_title %}
+    <h2>
+        {% block bootstrap5_title %}
+            Apagar registro
+        {% endblock %}
+    </h2>
+{% endblock %}
+
+{% block content %}
+<p>Você tem certeza que deseja apagar este registro?</p>
+<form method="post">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% bootstrap_button button_type="submit" content="Apagar" button_class="btn btn-danger"%}
+</form>
+{% endblock content %}

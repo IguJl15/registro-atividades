@@ -1,10 +1,11 @@
 from django.urls import path
+
 from records.views import (
     RecordCreateView,
+    RecordDeleteView,
     RecordListView,
     RecordReportView,
     TestePdfView,
-    # EasyPdf,
 )
 
 urlpatterns = [
@@ -12,5 +13,5 @@ urlpatterns = [
     path("novo", RecordCreateView.as_view()),
     path("relatorio", RecordReportView.as_view(), name="report"),
     path("pdf", TestePdfView.as_view(), name="pdf"),
-    # path("pdf2", EasyPdf.as_view(), name="pdf2")
+    path("delete/<int:pk>/", RecordDeleteView.as_view(), name="delete"),
 ]
